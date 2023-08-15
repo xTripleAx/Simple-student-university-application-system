@@ -1,0 +1,144 @@
+﻿@using TheTask.Data;
+@model ApplicationFacultyViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center w-75 justify-content-center mx-auto my-auto">
+    <h1 class="mx-3 my-3">Send Your Data!</h1>
+    <p>@ViewBag.hi</p>
+    @{
+        var formSubmitted = TempData["FormSubmitted"] as string;
+    }
+
+    @if (formSubmitted == "true")
+    {
+        <div class="alert alert-success" role="alert" id="success-alert">
+            Your application was sent successfully!
+        </div>
+    }
+    <form class="addmissionform shadow-lg" method="POST" enctype="multipart/form-data">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger no-bullets" })
+        <fieldset>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="@Model.Application.ApplicantFirstName" class="form-label mt-4">First Name</label>
+                        <input asp-for="@Model.Application.ApplicantFirstName" type="text" class="form-control" placeholder="First Name" autocomplete="off">
+                        <span asp-validation-for="@Model.Application.ApplicantFirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="@Model.Application.ApplicantLastName" class="form-label mt-4">Last Name</label>
+                        <input asp-for="@Model.Application.ApplicantLastName" type="text" class="form-control" placeholder="Last Name" autocomplete="off">
+                        <span asp-validation-for="@Model.Application.ApplicantLastName" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="@Model.Application.ApplicantEmail" class="form-label mt-4">Email address</label>
+                        <input asp-for="@Model.Application.ApplicantEmail" type="email" class="form-control" placeholder="Enter email">
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                        <span asp-validation-for="@Model.Application.ApplicantEmail" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="@Model.Application.ApplicantPhoneNumber" class="form-label mt-4">Phone Number</label>
+                        <input asp-for="@Model.Application.ApplicantPhoneNumber" type="tel" class="form-control" placeholder="Enter phone number (12/345678)" pattern="[0-9]{2}/[0-9]{6}">
+                        <span asp-validation-for="@Model.Application.ApplicantPhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mt-2 mb-2">
+                <label class="form-label">Gender</label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-check form-check-inline">
+                            <input asp-for="@Model.Application.ApplicantGender" class="form-check-input" type="radio" value="Male">
+                            <label class="form-check-label">
+                                Male
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check form-check-inline">
+                            <input asp-for="@Model.Application.ApplicantGender" class="form-check-input" type="radio" value="Female">
+                            <label class="form-check-label">
+                                Female
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <span asp-validation-for="@Model.Application.ApplicantGender" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.Application.ApplicantAddress" class="form-label mt-4">Address</label>
+                <input asp-for="@Model.Application.ApplicantAddress" type="text" class="form-control" placeholder="Enter address" autocomplete="off">
+                <span asp-validation-for="@Model.Application.ApplicantAddress" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="@Model.Application.ApplicantStatus" class="form-label mt-4">Degree</label>
+                        <select asp-for="@Model.Application.ApplicantStatus" class="form-select" id="Degree">
+                            <option value="UG">Undergraduate</option>
+                            <option value="G">Graduate</option>
+                            <option value="MD">Master's Degree</option>
+                        </select>
+                        <span asp-validation-for="@Model.Application.ApplicantStatus" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="@Model.Application.FacultyId" class="form-label mt-4">Desired Faculty</label>
+                        <select asp-for="@Model.Application.FacultyId" class="form-select" id="Faculty">
+                            @if (Model.faculties != null)
+                            {
+                                foreach (var obj in Model.faculties)
+                                {
+                                    <option value="@obj.Id">@obj.FacultyName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.Application.ApplicationData" for="Certificate" class="form-label mt-4">Include Your Certificate (PDF)</label>
+                <input asp-for="@Model.Application.ApplicationData" class="form-control" type="file" id="Certificate" accept="application/pdf">
+                <span asp-validation-for="@Model.Application.ApplicationData" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary my-2">Submit</button>
+        </fieldset>
+    </form>
+</div>
+
+    <style>
+    label.form-label,label.form-check-label{
+        color: black;
+    }
+    .no-bullets li{
+        list-style-type: none;
+    }
+    </style>
+
+    @section Scripts{
+        @{
+            <script>
+                $(document).ready(function () {
+                    // Hide success alert after 5 seconds (5000 milliseconds)
+                    setTimeout(function () {
+                        $('#success-alert').fadeOut();
+                    }, 3000);
+                });
+             </script>
+
+            <partial name="_ValidationScriptsPartial.cshtml" />
+
+        }
+    }

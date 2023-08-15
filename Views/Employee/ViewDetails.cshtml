@@ -1,0 +1,138 @@
+﻿@using TheTask.Data
+@model ApplicationFacultyViewModel
+@{
+    Layout = "~/Views/Shared/EmployeeLayout.cshtml";
+}
+
+<div class="card my-5">
+    <h1 class="card-header text-white text-center" style="background-color:rgba(0,111,62,255);">Application Details</h1>
+
+    <div class="card-body text-center">
+        <div class="row my-2">
+            <div class="col-md-3">
+                <h5 class="fw-bold">Full Name</h5>
+                <p>@Model.Application.ApplicantFirstName @Model.Application.ApplicantLastName</p>
+            </div>
+            <div class="col-md-3">
+                <h5 class="fw-bold">Email</h5>
+                <p>@Model.Application.ApplicantEmail</p>
+            </div>
+            <div class="col-md-3">
+                <h5 class="fw-bold">Phone Number</h5>
+                <p>@Model.Application.ApplicantPhoneNumber</p>
+            </div>
+            <div class="col-md-3">
+                <h5 class="fw-bold">Address</h5>
+                <p>@Model.Application.ApplicantAddress</p>
+            </div>
+        </div>
+
+        <div class="row my-2">
+            <div class="col-md-3">
+                <h5 class="fw-bold">Gender</h5>
+                <p>@Model.Application.ApplicantGender</p>
+            </div>
+            <div class="col-md-3">
+                <h5 class="fw-bold">Status</h5>
+                @if (Model.Application.ApplicantStatus.Equals("UG"))
+                {
+                    <p>Under Graduate</p>
+                }
+                else if (Model.Application.ApplicantStatus.Equals("G"))
+                {
+                    <p>Graduate</p>
+                }
+                else
+                {
+                    <p>Master</p>
+                }
+            </div>
+            <div class="col-md-3">
+                <h5 class="fw-bold">Applying For</h5>
+                @{
+                    int idtofind = Model.Application.FacultyId;
+                    var fac = Model.faculties.Find(f => f.Id == idtofind);
+                    string name = fac.FacultyName.ToString();
+                }
+                <p>@name</p>
+            </div>
+            <div class="col-md-3">
+                <h5 class="fw-bold">Date Applied</h5>
+                <p>@Model.Application.ApplicationDate.ToString("dd-MM-yyyy")</p>
+            </div>
+        </div>
+
+        <div class="row my-2">
+            <div class="col-md-3">
+                <a asp-controller="Employee" asp-action="ShowCertificate" asp-route-id="@Model.Application.Id" target="_blank" class="btn btn-outline-warning">Show Certificate</a>
+            </div>
+            @if (Model.Application.ApplicationStatus == null)
+            {
+                <div class="col-md-3">
+                    <a asp-controller="Employee" asp-action="SendEmail" asp-route-id="@Model.Application.Id" class="btn btn-outline-info">Approve</a> <!--id="approveButton" -->
+                </div>
+                <div class="col-md-3">
+                    <a asp-controller="Employee" asp-action="DisapproveEmail" asp-route-id="@Model.Application.Id"  type="button" class="btn btn-outline-danger">Disapprove</a>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-3">
+                    <a type="button" class="btn btn-outline-light" style="color:lightgray;pointer-events:none;">Approve</a>
+                </div>
+                <div class="col-md-3">
+                    <a type="button" class="btn btn-outline-light" style="color:lightgray;pointer-events:none;">Disapprove</a>
+                </div>
+            }
+            <div class="col-md-3">
+                <a asp-controller="Employee" asp-action="ApplicationList" type="button" class="btn btn-outline-dark">Back To List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="ApprovingConfirm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="approvalDateTime" class="form-label">Approval Date and Time</label>
+                        <input type="datetime-local" class="form-control" id="approvalDateTime" name="approvalDateTime" required>
+                        <input type="hidden" name="appId" value="@Model.Application.Id" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button asp-controller="Employee" asp-action="SendEmailPOST" type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modal {
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Adjust modal dimensions */
+    .modal-content {
+        width: 80%; /* Adjust to your preferred width */
+        max-width: 600px; /* Limit width if needed */
+        height: 80%; /* Adjust to your preferred height */
+        max-height: 80vh; /* Limit height if needed */
+    }
+
+</style>
+
+                @*asp-controller="Employee" asp-action="SendEmail" asp-route-id="@Model.Application.Id"*@

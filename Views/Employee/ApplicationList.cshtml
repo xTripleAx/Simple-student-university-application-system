@@ -1,0 +1,170 @@
+﻿@using TheTask.Data
+@using System.Diagnostics
+@{
+    Layout = "~/Views/Shared/EmployeeLayout.cshtml";
+}
+@model IEnumerable<Application>
+@{
+    var formSubmitted = TempData["FormSubmitted"] as string;
+}
+
+@if (formSubmitted == "Approved")
+{
+    <div class="alert alert-success my-2" role="alert" id="success-alert">
+        Application Approved Successfully!
+    </div>
+}
+@if (formSubmitted == "Disapproved")
+{
+    <div class="alert alert-success my-2" role="alert" id="success-alert">
+        Application Disapproved Successfully!
+    </div>
+}
+<h1 class="mt-4 text-center mx-auto">Applications List</h1>
+<div class="table-responsive overflow-visible">
+    <div class="filter-app my-3">
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control" id="filter1" placeholder="Filter by status" onkeyup="searchBlog(4, this.id)">
+                </div>
+            </div>
+            <div class="col-md-3 mb-2">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control" id="filter2" placeholder="Filter by name" onkeyup="searchBlog(0, this.id)">
+                </div>
+            </div>
+            <div class="col-md-3 mb-2">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control" id="filter3" placeholder="Filter by email" onkeyup="searchBlog(1, this.id)">
+                </div>
+            </div>
+            <div class="col-md-3 mb-2">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control" id="filter4" placeholder="Filter by phone" onkeyup="searchBlog(2, this.id)">
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-hover table-striped custom-table my-5" id="tableRecord">
+        <thead>
+            <tr>
+                <th scope="col">Fullname</th>
+                <th scope="col">Email</th>
+                <th scope="col">Phone Number</th>
+                <th scope="col">Address</th>
+                <th scope="col">Status</th>
+                <th scope="col">Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                var modelList = Model.ToList();
+                @for (int i = modelList.Count - 1; i>=0; i--)
+                {
+                    var obj = modelList[i];
+                    <tr>
+                        <td>@obj.ApplicantFirstName @obj.ApplicantLastName</td>
+                        <td>@obj.ApplicantEmail</td>
+                        <td>@obj.ApplicantPhoneNumber</td>
+                        <td>@obj.ApplicantAddress</td>
+                        <td>
+                            @if (obj.ApplicationStatus != null)
+                            {
+                                <span class="fw-bold @(obj.ApplicationStatus == "Approved" ? "text-success" : "text-danger")">@(obj.ApplicationStatus == "Approved" ? "Approved" : "Rejected")</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Pending</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="ViewDetails" asp-route-id="@obj.Id" class="btn btn-outline-primary">View</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    /* Add custom border and column separation */
+    .custom-table {
+        border: 1px solid rgb(136,183,123,0.6); /* Add a border to the entire table */
+    }
+
+    .custom-table th,
+    .custom-table td {
+            border: 1px solid rgb(136,183,123,0.6); /* Add borders to table cells */
+    }
+
+    .custom-table th {
+        border-top: none; /* Remove top border from table header cells */
+    }
+    }
+</style>
+
+@section Scripts{
+    @{
+        <script>
+            $(document).ready(function () {
+                // Hide success alert after 5 seconds (5000 milliseconds)
+                setTimeout(function () {
+                    $('#success-alert').fadeOut();
+                }, 3000);
+            });
+        </script>
+        <script>
+            function searchBlog(columnIndex, filterString) {
+               let filter = document.getElementById(filterString).value.toUpperCase();
+               let tableRecord = document.getElementById('tableRecord');
+               let tr = tableRecord.getElementsByTagName('tr');
+
+               for(var i = 0; i < tr.length; i++){
+                    let td = tr[i].getElementsByTagName('td')[columnIndex];
+
+                   if(td) {
+                       let textvalue = td.textContent || td.innerHTML
+
+                       if(textvalue.toUpperCase().indexOf(filter) > -1 || filter === "" ){
+                           tr[i].style.display = "";
+                       }
+                       else{
+                           tr[i].style.display = "none";
+                       }
+                   }
+               }
+           }
+            document.addEventListener('click', function (event) {
+                var filterInput = document.getElementById('filter1');
+                if (!filterInput.contains(event.target)) {
+                    filterInput.value = '';
+                }
+            });
+            document.addEventListener('click', function (event) {
+                var filterInput = document.getElementById('filter2');
+                if (!filterInput.contains(event.target)) {
+                    filterInput.value = '';
+                }
+            });
+            document.addEventListener('click', function (event) {
+                var filterInput = document.getElementById('filter3');
+                if (!filterInput.contains(event.target)) {
+                    filterInput.value = '';
+                }
+            });
+            document.addEventListener('click', function (event) {
+                var filterInput = document.getElementById('filter4');
+                if (!filterInput.contains(event.target)) {
+                    filterInput.value = '';
+                }
+            });
+        </script>
+    }
+}

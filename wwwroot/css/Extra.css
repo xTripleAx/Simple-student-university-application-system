@@ -1,0 +1,35 @@
+﻿body {
+}
+
+.addmissionform {
+    border-radius: 25px;
+    border-color: rgba(39,152,23,255);
+    background-color: rgba(211,211,211,0.5);
+    padding: 50px;
+}
+/*
+lightgreen: rgb(136,183,123,255)
+grayshade: rgb(211,211,211)
+spanishgreen: rgba(0,145,80,255)
+slimygreen: rgba(39,152,23,255)
+Darmouthgreen: rgba(0,111,62,255)
+*/
+
+.loginform {
+    width: 35%;
+    border-radius: 25px;
+    border: 3px solid rgba(39,152,23,255);
+    background-color: rgba(211,211,211,0.4);
+    text-align: center;
+    padding: 1rem;
+    margin: auto;
+}
+
+.custom-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 550px
+}
